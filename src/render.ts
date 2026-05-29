@@ -74,92 +74,12 @@ export function renderGame(
     drawParticles(ctx, app.particles.particles);
     drawScorePopups(ctx, app.particles.popups);
   }
-  if (getLevel(state.levelId).tutorial) drawTutorialOverlay(ctx, state);
   ctx.restore();
 
   if (state.countdown > 0) drawCountdown(ctx, state.countdown);
 }
 
-// === Tutorial overlay ===
-
-type TutorialStep = { text: string; done: boolean };
-
-function computeTutorialSteps(state: GameState): TutorialStep[] {
-  let choppedTomato = false;
-  let choppedLettuce = false;
-  let plateReady = false;
-
-  const scanItem = (item: Item): void => {
-    if (item.kind === 'tomato' && item.state === 'chopped') choppedTomato = true;
-    if (item.kind === 'lettuce' && item.state === 'chopped') choppedLettuce = true;
-    if (item.kind === 'plate') {
-      const hasT = item.contents.some(
-        (x) => x.kind === 'tomato' && x.state === 'chopped'
-      );
-      const hasL = item.contents.some(
-        (x) => x.kind === 'lettuce' && x.state === 'chopped'
-      );
-      if (hasT) choppedTomato = true;
-      if (hasL) choppedLettuce = true;
-      if (hasT && hasL) plateReady = true;
-    }
-  };
-
-  for (const row of state.tiles) {
-    for (const t of row) {
-      if (t.kind === 'station' && t.item) scanItem(t.item);
-    }
-  }
-  for (const p of state.players) {
-    if (p.held) scanItem(p.held);
-  }
-
-  const served = state.score > 0;
-  return [
-    { text: 'Chop a TOMATO 🍅 (place on CHOP, hold Space//)', done: choppedTomato },
-    { text: 'Chop a LETTUCE 🥬', done: choppedLettuce },
-    { text: 'Grab a PLATE 🍽️ and combine both', done: plateReady },
-    { text: 'Serve at the PASS 🛎️', done: served },
-  ];
-}
-
-function drawTutorialOverlay(ctx: CanvasRenderingContext2D, state: GameState): void {
-  const steps = computeTutorialSteps(state);
-  const padding = 10;
-  const lineH = 22;
-  const titleH = 26;
-  const w = 360;
-  const h = padding * 2 + titleH + steps.length * lineH + 10;
-  const x = 16;
-  const y = 12;
-
-  ctx.fillStyle = 'rgba(20,20,28,0.86)';
-  ctx.fillRect(x, y, w, h);
-  ctx.strokeStyle = '#ffd54a';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
-
-  ctx.fillStyle = '#ffd54a';
-  ctx.font = 'bold 16px system-ui';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText('TUTORIAL · Make a Salad', x + padding, y + padding);
-
-  ctx.font = '13px system-ui';
-  for (let i = 0; i < steps.length; i++) {
-    const s = steps[i]!;
-    const sy = y + padding + titleH + i * lineH;
-    ctx.fillStyle = s.done ? '#7ad26b' : '#ddd';
-    ctx.fillText(`${s.done ? '✓' : '○'}  ${s.text}`, x + padding, sy);
-  }
-
-  // Once everything is checked, hint at finishing.
-  if (steps.every((s) => s.done)) {
-    ctx.fillStyle = '#7ad26b';
-    ctx.font = 'bold 13px system-ui';
-    ctx.fillText('Nice! Keep cooking — round runs until time ends.', x + padding, y + h - 24);
-  }
-}
+// Tutorial guidance moved to a DOM banner — see src/tutorial.ts and index.html.
 
 function drawPlateStackOverlay(ctx: CanvasRenderingContext2D, state: GameState): void {
   const visible = Math.min(4, state.plateStock);

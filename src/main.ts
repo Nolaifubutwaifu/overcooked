@@ -8,6 +8,7 @@ import {
   type InputProvider,
 } from './input.ts';
 import { App } from './app.ts';
+import { syncTutorialBanner } from './tutorial.ts';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#game')!;
 canvas.width = CANVAS_WIDTH;
@@ -31,6 +32,7 @@ function loop(now: number): void {
 
   app.tick(dt);
   renderApp(ctx, app.state);
+  syncTutorialBanner(app.state.scene === 'playing' ? app.state.game : null);
 
   requestAnimationFrame(loop);
 }
