@@ -1,0 +1,22 @@
+{
+  "name": "overcooked",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "partykit dev",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy:server": "partykit deploy",
+    "deploy:web": "npx vercel --prod"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "partykit": "^0.0.115",
+    "partysocket": "^1.1.19"
+  }
+}

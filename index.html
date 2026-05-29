@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overcooked</title>
+  </head>
+  <body>
+    <div id="root">
+      <canvas id="game" width="960" height="672"></canvas>
+      <div id="controls">
+        <div class="player p1">
+          <span class="badge">P1</span>
+          <span><kbd>WASD</kbd> move</span>
+          <span><kbd>E</kbd> use</span>
+          <span><kbd>Space</kbd> chop/wash</span>
+          <span><kbd>Q</kbd> throw</span>
+        </div>
+        <div class="player p2">
+          <span class="badge">P2</span>
+          <span><kbd>↑←↓→</kbd> move</span>
+          <span><kbd>Shift</kbd> use</span>
+          <span><kbd>/</kbd> chop/wash</span>
+          <span><kbd>.</kbd> throw</span>
+        </div>
+        <div class="global">
+          <span><kbd>M</kbd> mute</span>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
